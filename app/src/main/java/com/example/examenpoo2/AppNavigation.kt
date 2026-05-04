@@ -1,6 +1,5 @@
 package com.example.examenpoo2
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,38 +8,34 @@ import com.example.examenpoo2.ui.Screen.LockScreen
 
 /**
  * AppNavigation: Gestiona el flujo de navegación de la aplicación.
- * Define las rutas (destinos) y la pantalla inicial.
  */
 @Composable
 fun AppNavigation() {
-    // NavController: Objeto que gestiona la navegación entre pantallas.
     val navController = rememberNavController()
 
-    // NavHost: Define el grafo de navegación y los destinos posibles.
     NavHost(navController = navController, startDestination = "login") {
-        
-        // Ruta para la pantalla de inicio de sesión.
         composable("login") {
-            LockScreen(
-                onLoginSuccess = { 
-                    // Al tener éxito, navegamos a 'bienvenido' y limpiamos el historial.
-                    navController.navigate("bienvenido") {
-                        popUpTo("login") { inclusive = true }
-                    }
-                }
-            )
+            LockScreen(onLoginSuccess = {
+                navController.navigate("bienvenido") { popUpTo("login") { inclusive = true } }
+            })
         }
-        
-        // Ruta para la pantalla de bienvenida.
         composable("bienvenido") {
-            WelcomeScreen(
-                onStartClick = { navController.navigate("pregunta") }
-            )
+            WelcomeScreen(onStartClick = { navController.navigate("pregunta") })
         }
-        
-        // Ruta para la pantalla de preguntas del test.
         composable("pregunta") {
-            QuestionScreen()
+            QuestionScreen(onTestFinished = { eng, art, health ->
+                navController.navigate("resultado/$eng/$art/$health")
+            })
+        }
+        // Cuarta Pantalla: Resultados con argumentos
+        composable("resultado/{eng}/{art}/{health}") { backStackEntry ->
+            val eng = backStackEntry.arguments?.getString("eng")?.toIntOrNull() ?: 0
+            val art = backStackEntry.arguments?.getString("art")?.toIntOrNull() ?: 0
+            val health = backStackEntry.arguments?.getString("health")?.toIntOrNull() ?: 0
+
+            ResultScreen(eng, art, health, onRestart = {
+                navController.navigate("bienvenido") { popUpTo("resultado") { inclusive = true } }
+            })
         }
     }
 }

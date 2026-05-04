@@ -12,7 +12,7 @@ import com.example.examenpoo2.models.AnswerOption
 import com.example.examenpoo2.models.Question
 
 @Composable
-fun QuestionScreen() {
+fun QuestionScreen(onTestFinished: (Int, Int, Int) -> Unit) {
     val questionBank = listOf(
         Question(
             id = 1,
@@ -78,17 +78,17 @@ fun QuestionScreen() {
         currentQuestion.options.forEach { option ->
             Button(
                 onClick = {
-                    // Acumular puntaje usando los nombres de propiedades del modelo AnswerOption
+                    // Acumulamos los puntos seleccionados
                     scoreEngineering += option.pointsEngineering
                     scoreArts += option.pointsArts
                     scoreHealth += option.pointsHealth
 
-                    // Pasar a siguiente pregunta
+                    // Evaluamos si hay más preguntas
                     if (currentQuestionIndex < questionBank.lastIndex) {
                         currentQuestionIndex++
                     } else {
-                        // Aquí termina el test
-                        println("Resultado: Ing=$scoreEngineering, Art=$scoreArts, Salud=$scoreHealth")
+                        // Al terminar, enviamos los resultados acumulados a la siguiente pantalla
+                        onTestFinished(scoreEngineering, scoreArts, scoreHealth)
                     }
                 },
                 modifier = Modifier
