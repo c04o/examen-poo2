@@ -3,7 +3,7 @@ package com.example.examenpoo2
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -51,10 +51,11 @@ fun QuestionScreen() {
             )
         )
     )
-    var currentQuestionIndex by remember { mutableStateOf(0) }
-    var score1 by remember { mutableStateOf(0) }
-    var score2 by remember { mutableStateOf(0) }
-    var score3 by remember { mutableStateOf(0) }
+
+    var currentQuestionIndex by remember { mutableIntStateOf(0) }
+    var scoreEngineering by remember { mutableIntStateOf(0) }
+    var scoreArts by remember { mutableIntStateOf(0) }
+    var scoreHealth by remember { mutableIntStateOf(0) }
 
     val currentQuestion = questionBank[currentQuestionIndex]
 
@@ -77,17 +78,17 @@ fun QuestionScreen() {
         currentQuestion.options.forEach { option ->
             Button(
                 onClick = {
-                    // Acumular puntaje
-                    score1 += option.score1
-                    score2 += option.score2
-                    score3 += option.score3
+                    // Acumular puntaje usando los nombres de propiedades del modelo AnswerOption
+                    scoreEngineering += option.pointsEngineering
+                    scoreArts += option.pointsArts
+                    scoreHealth += option.pointsHealth
 
                     // Pasar a siguiente pregunta
                     if (currentQuestionIndex < questionBank.lastIndex) {
                         currentQuestionIndex++
                     } else {
                         // Aquí termina el test
-                        println("Resultado: $score1 - $score2 - $score3")
+                        println("Resultado: Ing=$scoreEngineering, Art=$scoreArts, Salud=$scoreHealth")
                     }
                 },
                 modifier = Modifier
@@ -98,4 +99,4 @@ fun QuestionScreen() {
             }
         }
     }
-}}
+}

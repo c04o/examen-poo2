@@ -40,8 +40,7 @@ fun AppNavigation() {
         
         // Ruta para la pantalla de preguntas del test.
         composable("pregunta") {
-            // Pantalla de preguntas del test (Pendiente de implementación completa)
-            Text(text = "Aquí comenzará el Test Vocacional")
+            QuestionScreen()
         }
     }
 }
