@@ -12,17 +12,51 @@ import com.example.examenpoo2.models.AnswerOption
 import com.example.examenpoo2.models.Question
 
 @Composable
-fun QuestionScreen(onOptionSelected: () -> Unit) {
-    // Instanciación de objetos (POO) con datos de prueba temporal
-    val mockQuestion = Question(
-        id = 1,
-        text = "¿Qué actividad prefieres realizar en tu tiempo libre?",
-        options = listOf(
-            AnswerOption("Armar y desarmar equipos electrónicos", 3, 0, 0),
-            AnswerOption("Pintar, dibujar o diseñar", 0, 3, 0),
-            AnswerOption("Leer sobre anatomía o biología", 0, 0, 3)
+fun QuestionScreen() {
+    val questionBank = listOf(
+        Question(
+            id = 1,
+            text = "¿Qué actividad prefieres realizar en tu tiempo libre?",
+            options = listOf(
+                AnswerOption("Armar y desarmar equipos electrónicos", 3, 0, 0),
+                AnswerOption("Pintar, dibujar o diseñar", 0, 3, 0),
+                AnswerOption("Leer sobre anatomía o biología", 0, 0, 3)
+            )
+        ),
+        Question(
+            id = 2,
+            text = "¿Qué tipo de problemas te gusta resolver?",
+            options = listOf(
+                AnswerOption("Problemas técnicos o de lógica", 3, 0, 0),
+                AnswerOption("Problemas creativos o de diseño", 0, 3, 0),
+                AnswerOption("Problemas relacionados con personas o salud", 0, 0, 3)
+            )
+        ),
+        Question(
+            id = 3,
+            text = "¿Qué materia te atrae más?",
+            options = listOf(
+                AnswerOption("Matemática o física", 3, 0, 0),
+                AnswerOption("Arte o literatura", 0, 3, 0),
+                AnswerOption("Biología o química", 0, 0, 3)
+            )
+        ),
+        Question(
+            id = 4,
+            text = "¿Cómo te describen tus amigos?",
+            options = listOf(
+                AnswerOption("Analítico y lógico", 3, 0, 0),
+                AnswerOption("Creativo e imaginativo", 0, 3, 0),
+                AnswerOption("Empático y atento", 0, 0, 3)
+            )
         )
     )
+    var currentQuestionIndex by remember { mutableStateOf(0) }
+    var score1 by remember { mutableStateOf(0) }
+    var score2 by remember { mutableStateOf(0) }
+    var score3 by remember { mutableStateOf(0) }
+
+    val currentQuestion = questionBank[currentQuestionIndex]
 
     Column(
         modifier = Modifier
@@ -31,27 +65,37 @@ fun QuestionScreen(onOptionSelected: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Pregunta ${mockQuestion.id}",
-            fontSize = 20.sp
-        )
+
+        Text("Pregunta ${currentQuestion.id}", fontSize = 20.sp)
+
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = mockQuestion.text,
-            fontSize = 22.sp
-        )
+
+        Text(currentQuestion.text, fontSize = 22.sp)
+
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Iteración sobre la lista de opciones para generar componentes interactivos
-        mockQuestion.options.forEach { option ->
+        currentQuestion.options.forEach { option ->
             Button(
-                onClick = onOptionSelected,
+                onClick = {
+                    // Acumular puntaje
+                    score1 += option.score1
+                    score2 += option.score2
+                    score3 += option.score3
+
+                    // Pasar a siguiente pregunta
+                    if (currentQuestionIndex < questionBank.lastIndex) {
+                        currentQuestionIndex++
+                    } else {
+                        // Aquí termina el test
+                        println("Resultado: $score1 - $score2 - $score3")
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             ) {
-                Text(text = option.text)
+                Text(option.text)
             }
         }
     }
-}
+}}
