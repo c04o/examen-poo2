@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.examenpoo2.ui.Screen.LockScreen
+import com.example.examenpoo2.ui.screen.LockScreen
 
 /**
  * AppNavigation: Gestiona el flujo de navegación de la aplicación.
