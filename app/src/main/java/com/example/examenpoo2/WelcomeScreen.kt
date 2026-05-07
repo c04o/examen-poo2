@@ -19,55 +19,6 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun WelcomeScreen(onStartClick: () -> Unit) {
-<<<<<<< HEAD
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Test Vocacional",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Center
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            Text(
-                text = "Descubre tu carrera ideal",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.secondary,
-                textAlign = TextAlign.Center
-            )
-            
-            Spacer(modifier = Modifier.height(32.dp))
-            
-            Button(
-                onClick = onStartClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text(
-                    text = "Comenzar Test",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-=======
     // Animación de pulso para el ícono
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val scale by infiniteTransition.animateFloat(
@@ -104,7 +55,7 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
 
         Text(
             text = "Test Vocacional",
-            fontSize = 36.sp,
+            style = MaterialTheme.typography.displayMedium, // Usando MaterialTheme typography para consistencia
             fontWeight = FontWeight.ExtraBold,
             color = Color.White
         )
@@ -113,9 +64,9 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
 
         Text(
             text = "Descubre tu carrera ideal y tu verdadero potencial.",
-            fontSize = 18.sp,
+            style = MaterialTheme.typography.bodyLarge,
             color = Color.White.copy(alpha = 0.8f),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(48.dp))
@@ -132,8 +83,7 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
                 .height(56.dp),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
         ) {
-            Text(text = "Comenzar Aventura", fontSize = 18.sp, fontWeight = FontWeight.Bold)
->>>>>>> 31a8f2a (agregar colores bonitos y toda la vaina)
+            Text(text = "Comenzar Aventura", fontWeight = FontWeight.Bold)
         }
     }
 }

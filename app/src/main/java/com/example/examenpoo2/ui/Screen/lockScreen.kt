@@ -1,10 +1,5 @@
 package com.example.examenpoo2.ui.screen
 
-<<<<<<< HEAD
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-=======
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -13,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
->>>>>>> de602e9 (decorar lockScreen)
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -40,103 +34,6 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-<<<<<<< HEAD
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.secondary
-                    )
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            shape = RoundedCornerShape(28.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(32.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Bienvenido",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                
-                Text(
-                    text = "Crea tu perfil vocacional",
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text("Nombre Completo") },
-                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Correo Electrónico") },
-                    leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Contraseña") },
-                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-                    visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Button(
-                    onClick = {
-                        if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
-                            onLoginSuccess()
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Text(
-                        text = "CONTINUAR",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
-=======
     // Estado para controlar la animación de entrada
     var isVisible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { isVisible = true }
@@ -259,7 +156,6 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
                     ) {
                         Text("Ingresar", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
->>>>>>> de602e9 (decorar lockScreen)
                 }
             }
         }
