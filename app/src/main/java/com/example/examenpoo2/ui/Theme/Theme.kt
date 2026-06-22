@@ -1,4 +1,4 @@
-package com.example.examenpoo2.ui.theme
+package com.example.examenpoo2.ui.Theme
 
 import android.app.Activity
 import android.os.Build

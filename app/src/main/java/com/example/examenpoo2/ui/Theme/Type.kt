@@ -1,4 +1,4 @@
-package com.example.examenpoo2.ui.theme
+package com.example.examenpoo2.ui.Theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

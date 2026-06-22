@@ -1,4 +1,4 @@
-package com.example.examenpoo2.ui.screen
+package com.example.examenpoo2.ui.Screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,10 +18,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * LockScreen: Pantalla de inicio de sesión con diseño moderno.
- * Incluye gradientes, tarjetas y iconos de Material Design.
- */
 @Composable
 fun LockScreen(onLoginSuccess: () -> Unit) {
     var name by remember { mutableStateOf("") }

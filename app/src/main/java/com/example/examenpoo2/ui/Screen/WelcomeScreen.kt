@@ -1,4 +1,4 @@
-package com.example.examenpoo2
+package com.example.examenpoo2.ui.Screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
