@@ -2,7 +2,8 @@ package com.example.examenpoo2.ui.ViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.examenpoo2.ui.Repository.QuestionRepository
+import com.example.examenpoo2.ui.repository.QuestionRepository
+import com.example.examenpoo2.ui.viewmodel.QuestionViewModel
 
 class QuestionViewModelFactory(private val repository: QuestionRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -10,6 +11,6 @@ class QuestionViewModelFactory(private val repository: QuestionRepository) : Vie
             @Suppress("UNCHECKED_CAST")
             return QuestionViewModel(repository) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        throw IllegalArgumentException("ViewModel desconocido")
     }
 }

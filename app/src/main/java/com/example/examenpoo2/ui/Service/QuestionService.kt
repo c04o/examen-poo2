@@ -1,6 +1,6 @@
-package com.example.examenpoo2.ui.Service
+package com.example.examenpoo2.ui.service
 
-import com.example.examenpoo2.ui.Model.Question
+import com.example.examenpoo2.ui.model.Question
 import retrofit2.http.GET
 
 interface QuestionService {

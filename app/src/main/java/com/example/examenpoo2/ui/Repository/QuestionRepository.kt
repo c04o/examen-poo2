@@ -1,19 +1,17 @@
-package com.example.examenpoo2.ui.Repository
+package com.example.examenpoo2.ui.repository
 
-import com.example.examenpoo2.ui.Model.Question
-import com.example.examenpoo2.ui.Service.QuestionService
-import com.example.examenpoo2.ui.Service.ApiResult
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.example.examenpoo2.ui.model.Question
+import com.example.examenpoo2.ui.service.ApiResult
+import com.example.examenpoo2.ui.service.QuestionService
+
 
 class QuestionRepository(private val service: QuestionService) {
-    fun getQuestions(): Flow<ApiResult<List<Question>>> = flow {
-        emit(ApiResult.Loading)
-        try {
-            val response = service.getQuestions()
-            emit(ApiResult.Success(response))
+    suspend fun getQuestions(): ApiResult<List<Question>> {
+        return try {
+            val result = service.getQuestions()
+            ApiResult.Success(result)
         } catch (e: Exception) {
-            emit(ApiResult.Error(e.message ?: "Error desconocido", e))
+            ApiResult.Error(e.message ?: "Error desconocido")
         }
     }
 }

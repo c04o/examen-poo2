@@ -1,4 +1,4 @@
-package com.example.examenpoo2.ui.Model
+package com.example.examenpoo2.ui.model
 
 import kotlinx.serialization.Serializable
 

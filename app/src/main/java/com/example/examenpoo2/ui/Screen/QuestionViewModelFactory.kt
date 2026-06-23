@@ -2,7 +2,7 @@ package com.example.examenpoo2.ui.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.examenpoo2.ui.Repository.QuestionRepository
+import com.example.examenpoo2.ui.repository.QuestionRepository
 
 class QuestionViewModelFactory(private val repository: QuestionRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

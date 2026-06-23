@@ -1,18 +1,17 @@
-package com.example.examenpoo2.ui.Navigation
+package com.example.examenpoo2.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.examenpoo2.ui.Screen.LockScreen
-import com.example.examenpoo2.ui.Screen.WelcomeScreen
-import com.example.examenpoo2.ui.Screen.QuestionListScreen
+import com.example.examenpoo2.ui.screen.LockScreen
+import com.example.examenpoo2.ui.screen.WelcomeScreen
+import com.example.examenpoo2.ui.screen.QuestionListScreen
 import com.example.examenpoo2.ui.Service.ServiceLocator
-import com.example.examenpoo2.ui.ViewModel.QuestionViewModel
 import com.example.examenpoo2.ui.ViewModel.QuestionViewModelFactory
+import com.example.examenpoo2.ui.viewmodel.QuestionViewModel
 
-// Importamos las rutas explícitamente si es necesario o usamos el mismo paquete
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
@@ -23,7 +22,7 @@ fun AppNavigation() {
             LockScreen(
                 onLoginSuccess = { 
                     navController.navigate(WelcomeRoute) {
-                        popUpTo(LoginRoute) { inclusive = true }
+                        popUpTo<LoginRoute> { inclusive = true }
                     }
                 }
             )

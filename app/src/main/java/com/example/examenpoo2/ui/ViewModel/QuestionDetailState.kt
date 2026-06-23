@@ -1,6 +1,6 @@
 package com.example.examenpoo2.ui.ViewModel
 
-import com.example.examenpoo2.ui.Model.Question
+import com.example.examenpoo2.ui.model.Question
 
 data class QuestionDetailState(
     val isLoading: Boolean = false,

@@ -1,4 +1,4 @@
-package com.example.examenpoo2.ui.Navigation
+package com.example.examenpoo2.ui.navigation
 
 import kotlinx.serialization.Serializable
 

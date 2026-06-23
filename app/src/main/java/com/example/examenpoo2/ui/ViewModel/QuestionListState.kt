@@ -1,9 +1,9 @@
-package com.example.examenpoo2.ui.ViewModel
+package com.example.examenpoo2.ui.viewmodel
 
-import com.example.examenpoo2.ui.Model.Question
+import com.example.examenpoo2.ui.model.Question
 
-data class QuestionListState(
-    val isLoading: Boolean = false,
-    val questions: List<Question> = emptyList(),
-    val error: String? = null
-)
+sealed interface QuestionListState {
+    data object Loading : QuestionListState
+    data class Success(val questions: List<Question>) : QuestionListState
+    data class Error(val message: String) : QuestionListState
+}

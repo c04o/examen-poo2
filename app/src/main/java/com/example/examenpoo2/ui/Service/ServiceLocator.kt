@@ -1,11 +1,11 @@
 package com.example.examenpoo2.ui.Service
 
-import com.example.examenpoo2.ui.Repository.QuestionRepository
+import com.example.examenpoo2.ui.repository.QuestionRepository
+import com.example.examenpoo2.ui.service.QuestionService
 
 object ServiceLocator {
-    private val questionService by lazy { RetrofitClient.instance }
-    
-    val questionRepository by lazy {
-        QuestionRepository(questionService)
-    }
+    private val questionService: QuestionService =
+        RetrofitClient.instance.create(QuestionService::class.java)
+
+    val questionRepository: QuestionRepository = QuestionRepository(questionService)
 }
