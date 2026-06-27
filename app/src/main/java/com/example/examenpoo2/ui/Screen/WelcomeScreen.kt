@@ -1,4 +1,4 @@
-package com.example.examenpoo2.ui.screen
+package com.example.examenpoo2.ui.Screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -9,8 +9,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+/**
+ * WelcomeScreen: Pantalla de bienvenida de la aplicación.
+ * Proporciona una introducción al test vocacional y un punto de entrada claro para comenzar.
+ * 
+ * @param onStartClick Callback que se dispara cuando el usuario pulsa el botón para iniciar el test.
+ */
 @Composable
 fun WelcomeScreen(onStartClick: () -> Unit) {
+    // Surface proporciona el contenedor base con el color de fondo del tema actual.
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -22,6 +29,7 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Título principal con énfasis visual.
             Text(
                 text = "Test Vocacional",
                 style = MaterialTheme.typography.headlineLarge,
@@ -32,8 +40,9 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
             
             Spacer(modifier = Modifier.height(16.dp))
             
+            // Subtítulo informativo.
             Text(
-                text = "Descubre tu carrera ideal",
+                text = "Descubre tu carrera ideal analizando tus intereses y aptitudes.",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center
@@ -41,6 +50,7 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
             
             Spacer(modifier = Modifier.height(32.dp))
             
+            // Botón de acción principal para iniciar la navegación hacia las preguntas.
             Button(
                 onClick = onStartClick,
                 modifier = Modifier

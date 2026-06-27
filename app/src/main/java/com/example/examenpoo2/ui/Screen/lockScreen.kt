@@ -1,4 +1,4 @@
-package com.example.examenpoo2.ui.screen
+package com.example.examenpoo2.ui.Screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,8 +18,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * LockScreen: Pantalla de inicio de sesión y registro de perfil.
+ * Utiliza un diseño moderno con gradientes y tarjetas elevadas.
+ * 
+ * @param onLoginSuccess Callback que se ejecuta cuando el usuario completa sus datos y presiona continuar.
+ */
 @Composable
 fun LockScreen(onLoginSuccess: () -> Unit) {
+    // Estados locales para capturar la entrada del usuario en tiempo real.
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -37,6 +44,7 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
             ),
         contentAlignment = Alignment.Center
     ) {
+        // Tarjeta central que contiene el formulario
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,6 +74,7 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+                // Campo: Nombre Completo
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
@@ -78,6 +87,7 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Campo: Correo Electrónico
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -90,6 +100,7 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Campo: Contraseña (con transformación visual de seguridad)
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -103,8 +114,10 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+                // Botón de acción principal
                 Button(
                     onClick = {
+                        // Validación simple: asegurar que los campos no estén vacíos
                         if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
                             onLoginSuccess()
                         }

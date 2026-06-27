@@ -1,7 +1,7 @@
-package com.example.examenpoo2.ui.screen
+package com.example.examenpoo2.ui.Screen
 
 
-import com.example.examenpoo2.ui.model.Question
+import com.example.examenpoo2.ui.Model.Question
 
 data class QuestionListState(
     val isLoading: Boolean = false,

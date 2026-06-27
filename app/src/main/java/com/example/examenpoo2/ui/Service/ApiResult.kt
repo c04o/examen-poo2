@@ -1,4 +1,4 @@
-package com.example.examenpoo2.ui.service
+package com.example.examenpoo2.ui.Service
 
 sealed interface ApiResult<out T> {
     object Loading : ApiResult<Nothing>
