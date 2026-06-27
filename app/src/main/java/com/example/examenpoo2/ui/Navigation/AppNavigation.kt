@@ -5,9 +5,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.examenpoo2.ui.Screen.LockScreen
 import com.example.examenpoo2.ui.Screen.WelcomeScreen
-import com.example.examenpoo2.ui.Screen.QuestionListScreen
+import com.example.examenpoo2.QuestionScreen
+import com.example.examenpoo2.ResultScreen
 import com.example.examenpoo2.ui.Service.ServiceLocator
 import com.example.examenpoo2.ui.ViewModel.QuestionViewModel
 import com.example.examenpoo2.ui.ViewModel.QuestionViewModelFactory
@@ -36,11 +38,27 @@ fun AppNavigation() {
         }
         
         composable<QuestionListRoute> {
-            val viewModel: QuestionViewModel = viewModel(
-                factory = QuestionViewModelFactory(ServiceLocator.questionRepository)
+            QuestionScreen(
+                onTestFinished = { eng, art, health ->
+                    navController.navigate(ResultRoute(eng, art, health)) {
+                        popUpTo(WelcomeRoute)
+                    }
+                }
             )
-            
-            QuestionListScreen(viewModel = viewModel)
+        }
+
+        composable<ResultRoute> { backStackEntry ->
+            val route: ResultRoute = backStackEntry.toRoute()
+            ResultScreen(
+                eng = route.engineeringScore,
+                art = route.artsScore,
+                health = route.healthScore,
+                onRestart = {
+                    navController.navigate(WelcomeRoute) {
+                        popUpTo(WelcomeRoute) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }
