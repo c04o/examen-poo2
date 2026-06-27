@@ -1,9 +1,5 @@
 package com.example.examenpoo2
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -12,136 +8,121 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.examenpoo2.models.AnswerOption
-import com.example.examenpoo2.models.Question
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.examenpoo2.ui.Service.ServiceLocator
+import com.example.examenpoo2.ui.ViewModel.QuestionViewModel
+import com.example.examenpoo2.ui.ViewModel.QuestionViewModelFactory
 
 @Composable
-fun QuestionScreen(onTestFinished: (Int, Int, Int) -> Unit) {
-    // Mantenemos tu banco de preguntas original
-    val questionBank = listOf(
-        Question(1, "¿Qué actividad prefieres realizar en tu tiempo libre?", listOf(
-            AnswerOption("Armar y desarmar equipos electrónicos", 3, 0, 0),
-            AnswerOption("Pintar, dibujar o diseñar", 0, 3, 0),
-            AnswerOption("Leer sobre anatomía o biología", 0, 0, 3)
-        )),
-        Question(2, "¿Qué tipo de problemas te gusta resolver?", listOf(
-            AnswerOption("Problemas técnicos o de lógica", 3, 0, 0),
-            AnswerOption("Problemas creativos o de diseño", 0, 3, 0),
-            AnswerOption("Problemas relacionados con personas o salud", 0, 0, 3)
-        )),
-        Question(3, "¿Qué materia te atrae más?", listOf(
-            AnswerOption("Matemática o física", 3, 0, 0),
-            AnswerOption("Arte o literatura", 0, 3, 0),
-            AnswerOption("Biología o química", 0, 0, 3)
-        )),
-        Question(4, "¿Cómo te describen tus amigos?", listOf(
-            AnswerOption("Analítico y lógico", 3, 0, 0),
-            AnswerOption("Creativo e imaginativo", 0, 3, 0),
-            AnswerOption("Empático y atento", 0, 0, 3)
-        ))
+fun QuestionScreen(
+    onTestFinished: (Int, Int, Int) -> Unit,
+    // Instanciamos tu ViewModel usando tu Factory y el ServiceLocator
+    viewModel: QuestionViewModel = viewModel(
+        factory = QuestionViewModelFactory(ServiceLocator.questionRepository)
     )
+) {
+    // Observamos el estado de tu ViewModel (QuestionListState)
+    val uiState by viewModel.uiState.collectAsState()
 
-    var currentQuestionIndex by remember { mutableIntStateOf(0) }
-    var scoreEngineering by remember { mutableIntStateOf(0) }
-    var scoreArts by remember { mutableIntStateOf(0) }
-    var scoreHealth by remember { mutableIntStateOf(0) }
+    // 1. Mostrar estado de Carga
+    if (uiState.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = Color(0xFF00C9FF))
+        }
+        return // Detenemos la ejecución aquí mientras carga
+    }
 
-    val backgroundGradient = Brush.verticalGradient(
-        colors = listOf(Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364))
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(backgroundGradient)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Barra de progreso personalizada
-        val progress = (currentQuestionIndex + 1).toFloat() / questionBank.size
-        LinearProgressIndicator(
-            progress = { progress },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(8.dp)
-                .clip(RoundedCornerShape(50)),
-            color = Color(0xFF00C9FF),
-            trackColor = Color.White.copy(alpha = 0.2f)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Pregunta ${currentQuestionIndex + 1} de ${questionBank.size}",
-            color = Color(0xFF92FE9D),
-            fontWeight = FontWeight.Bold
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Transición suave entre preguntas
-        Crossfade(
-            targetState = questionBank[currentQuestionIndex],
-            animationSpec = tween(durationMillis = 500),
-            label = "question_fade"
-        ) { question ->
+    // 2. Mostrar estado de Error
+    if (uiState.error != null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = question.text,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.White,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 32.dp)
-                )
+                Text("Error al cargar preguntas", color = Color.Red, fontSize = 18.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(uiState.error!!, color = Color.White)
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = { viewModel.loadQuestions() }) {
+                    Text("Reintentar")
+                }
+            }
+        }
+        return
+    }
 
-                question.options.forEach { option ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                            .clickable {
-                                scoreEngineering += option.pointsEngineering
-                                scoreArts += option.pointsArts
-                                scoreHealth += option.pointsHealth
+    // 3. Mostrar estado de Éxito (Si hay preguntas)
+    val questionBank = uiState.questions
+    if (questionBank.isNotEmpty()) {
+        var currentQuestionIndex by remember { mutableStateOf(0) }
+        var scoreEngineering by remember { mutableStateOf(0) }
+        var scoreArts by remember { mutableStateOf(0) }
+        var scoreHealth by remember { mutableStateOf(0) }
 
-                                if (currentQuestionIndex < questionBank.lastIndex) {
-                                    currentQuestionIndex++
-                                } else {
-                                    onTestFinished(scoreEngineering, scoreArts, scoreHealth)
-                                }
-                            },
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.15f)),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.PlayArrow,
-                                contentDescription = null,
-                                tint = Color(0xFF00C9FF)
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = option.text,
-                                color = Color.White,
-                                fontSize = 16.sp
-                            )
+        val currentQuestion = questionBank[currentQuestionIndex]
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Pregunta ${currentQuestionIndex + 1} de ${questionBank.size}",
+                color = Color.White,
+                fontSize = 18.sp
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = currentQuestion.text,
+                color = Color.White,
+                fontSize = 22.sp
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            currentQuestion.options.forEach { option ->
+                Card(
+                    onClick = {
+                        scoreEngineering += option.pointsEngineering
+                        scoreArts += option.pointsArts
+                        scoreHealth += option.pointsHealth
+
+                        if (currentQuestionIndex < questionBank.lastIndex) {
+                            currentQuestionIndex++
+                        } else {
+                            onTestFinished(scoreEngineering, scoreArts, scoreHealth)
                         }
+                    },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.15f)),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = null,
+                            tint = Color(0xFF00C9FF)
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = option.text,
+                            color = Color.White,
+                            fontSize = 16.sp
+                        )
                     }
                 }
             }
+        }
+    } else {
+        // Estado vacío: Cargó bien pero la lista vino vacía (0 preguntas)
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("No hay preguntas disponibles en el servidor.", color = Color.White)
         }
     }
 }
