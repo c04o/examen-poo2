@@ -1,29 +1,45 @@
 package com.example.examenpoo2.ui.ViewModel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.examenpoo2.ui.Repository.UserRepository
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel encargado de gestionar la lógica de autenticación y registro de usuarios.
- * Actúa como intermediario entre la vista y el repositorio de datos.
- *
- * @property userRepository El repositorio utilizado para las operaciones de persistencia del usuario.
+ * ViewModel encargado de gestionar la lógica de autenticación sincronizada con el Backend.
  */
 class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
 
+    var isLoading by mutableStateOf(false)
+        private set
+
+    var errorMessage by mutableStateOf<String?>(null)
+        private set
+
     /**
-     * Registra un nuevo usuario en la base de datos local y ejecuta una acción al finalizar.
-     *
-     * Este método utiliza el [viewModelScope] para realizar la operación de escritura de forma 
-     * asíncrona, garantizando que no se bloquee el hilo principal de la interfaz de usuario.
-     *
-     * @param name Nombre completo del usuario.
-     * @param email Correo electrónico de acceso.
-     * @param password Contraseña elegida.
-     * @param onSuccess Función de callback que se invoca tras completar exitosamente el registro.
+     * Intenta iniciar sesión con el backend.
      */
+    fun login(email: String, password: String, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            isLoading = true
+            errorMessage = null
+            
+            val user = userRepository.loginWithBackend(email, password)
+            
+            isLoading = false
+            if (user != null) {
+                onSuccess()
+            } else {
+                errorMessage = "Credenciales incorrectas o error de conexión"
+            }
+        }
+    }
+
+    // Mantenemos este para compatibilidad si se desea registro local rápido, 
+    // pero la prioridad ahora es el login real.
     fun registerAndLogin(name: String, email: String, password: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
             userRepository.registerUser(name, email, password)

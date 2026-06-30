@@ -152,26 +152,45 @@ fun LockScreen(
                         shape = RoundedCornerShape(12.dp)
                     )
 
+                    // Mensaje de error general si el login falla
+                    if (viewModel.errorMessage != null) {
+                        Text(
+                            text = viewModel.errorMessage!!,
+                            color = Color.Red,
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Button(
                         onClick = {
-                            // Validar campos
+                            // Validar campos localmente primero
                             nameError = if (name.isBlank()) "El nombre es obligatorio" else null
                             emailError = if (email.isBlank()) "El correo es obligatorio" else null
                             passwordError = if (password.isBlank()) "La contraseña es obligatoria" else null
 
-                            if (nameError == null && emailError == null && passwordError == null) {
-                                viewModel.registerAndLogin(name, email, password) {
+                            if (emailError == null && passwordError == null) {
+                                viewModel.login(email, password) {
                                     onLoginSuccess()
                                 }
                             }
                         },
+                        enabled = !viewModel.isLoading,
                         shape = RoundedCornerShape(50),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00C9FF)),
                         modifier = Modifier.fillMaxWidth().height(56.dp)
                     ) {
-                        Text("Ingresar", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                        if (viewModel.isLoading) {
+                            CircularProgressIndicator(
+                                color = Color.White,
+                                modifier = Modifier.size(24.dp),
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text("Ingresar", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                        }
                     }
                 }
             }
