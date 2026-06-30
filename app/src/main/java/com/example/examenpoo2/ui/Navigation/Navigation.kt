@@ -13,3 +13,6 @@ object QuestionListRoute
 
 @Serializable
 data class QuestionDetailRoute(val questionId: Int)
+
+@Serializable
+data class ResultRoute(val engineeringScore: Int, val artsScore: Int, val healthScore: Int)

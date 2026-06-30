@@ -11,7 +11,8 @@ data class Question(
 
 @Serializable
 data class AnswerOption(
-    val id: Int,
     val text: String,
-    val category: String
+    val pointsEngineering: Int,
+    val pointsArts: Int,
+    val pointsHealth: Int
 )
