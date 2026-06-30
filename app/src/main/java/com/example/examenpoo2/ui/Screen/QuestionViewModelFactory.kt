@@ -8,7 +8,7 @@ class QuestionViewModelFactory(private val repository: QuestionRepository) : Vie
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(QuestionViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return QuestionViewModel(repository) as T
+            return com.example.examenpoo2.ui.ViewModel.QuestionViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

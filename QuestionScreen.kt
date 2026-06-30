@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.examenpoo2.ui.Service.ServiceLocator
-import com.example.examenpoo2.ui.screen.QuestionViewModel
 import com.example.examenpoo2.ui.ViewModel.QuestionViewModelFactory
+import com.example.examenpoo2.ui.screen.QuestionViewModel
 
 @Composable
 fun QuestionScreen(
@@ -92,7 +92,7 @@ fun QuestionScreen(
                         if (currentQuestionIndex < questionBank.lastIndex) {
                             currentQuestionIndex++
                         } else {
-                            // LLAMADA CRÍTICA: Guardar en historial antes de navegar a resultados
+                            // Guardamos el resultado antes de terminar
                             viewModel.saveTestResult(scoreEngineering, scoreArts, scoreHealth) {
                                 onTestFinished(scoreEngineering, scoreArts, scoreHealth)
                             }
@@ -123,7 +123,7 @@ fun QuestionScreen(
         }
     } else {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No hay preguntas disponibles en el servidor.", color = Color.White)
+            Text("No hay preguntas disponibles.", color = Color.White)
         }
     }
 }
