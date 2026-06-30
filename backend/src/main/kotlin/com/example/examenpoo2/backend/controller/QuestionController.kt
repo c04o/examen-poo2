@@ -6,6 +6,10 @@ import com.example.examenpoo2.backend.model.UserProfile
 import com.example.examenpoo2.backend.model.UserRole
 import com.example.examenpoo2.backend.service.QuestionService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -31,19 +35,15 @@ class QuestionController(private val questionService: QuestionService) {
         }
     }
 
-    @Operation(
-        summary = "Get all vocational test questions",
-        description = "Public access for all roles (ADMIN, EDITOR, STUDENT)."
-    )
+    @Operation(summary = "Get all questions", description = "Public access for all roles.")
     @GetMapping
-    fun getQuestions(): List<Question> {
-        return questionService.getVocationalTest()
-    }
+    fun getQuestions(): List<Question> = questionService.getVocationalTest()
 
-    @Operation(
-        summary = "Create a new question",
-        description = "Allowed for ADMIN and EDITOR roles."
-    )
+    @Operation(summary = "Create a new question", description = "Allowed for ADMIN and EDITOR.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "201", description = "Question created", content = [Content(schema = Schema(implementation = Question::class))]),
+        ApiResponse(responseCode = "403", description = "Forbidden", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
+    ])
     @PostMapping
     fun createQuestion(
         @RequestHeader("X-Role", defaultValue = "STUDENT") role: String,
@@ -58,10 +58,12 @@ class QuestionController(private val questionService: QuestionService) {
         }
     }
 
-    @Operation(
-        summary = "Update an existing question",
-        description = "Allowed only for ADMIN role."
-    )
+    @Operation(summary = "Update a question", description = "Allowed only for ADMIN.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Question updated"),
+        ApiResponse(responseCode = "403", description = "Forbidden", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+        ApiResponse(responseCode = "404", description = "Not Found")
+    ])
     @PutMapping("/{id}")
     fun updateQuestion(
         @RequestHeader("X-Role", defaultValue = "STUDENT") role: String,
@@ -73,17 +75,15 @@ class QuestionController(private val questionService: QuestionService) {
                 .body(ErrorResponse(403, "Acceso denegado: Solo el ADMIN puede actualizar.", UserRole.ADMIN))
         }
         val updated = questionService.updateQuestion(id, question)
-        return if (updated != null) {
-            ResponseEntity.ok(updated)
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        return if (updated != null) ResponseEntity.ok(updated) else ResponseEntity.notFound().build()
     }
 
-    @Operation(
-        summary = "Delete a question",
-        description = "Allowed only for ADMIN role."
-    )
+    @Operation(summary = "Delete a question", description = "Allowed only for ADMIN.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "204", description = "Question deleted"),
+        ApiResponse(responseCode = "403", description = "Forbidden", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+        ApiResponse(responseCode = "404", description = "Not Found")
+    ])
     @DeleteMapping("/{id}")
     fun deleteQuestion(
         @RequestHeader("X-Role", defaultValue = "STUDENT") role: String,
@@ -93,10 +93,6 @@ class QuestionController(private val questionService: QuestionService) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ErrorResponse(403, "Acceso denegado: Solo el ADMIN puede eliminar.", UserRole.ADMIN))
         }
-        return if (questionService.deleteQuestion(id)) {
-            ResponseEntity.noContent().build()
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        return if (questionService.deleteQuestion(id)) ResponseEntity.noContent().build() else ResponseEntity.notFound().build()
     }
 }

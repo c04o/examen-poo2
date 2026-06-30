@@ -6,6 +6,10 @@ import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.Contact
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
+import io.swagger.v3.core.converter.ModelConverters
+import com.example.examenpoo2.backend.model.ErrorResponse
+import com.example.examenpoo2.backend.model.UserRole
+import com.example.examenpoo2.backend.model.UserProfile
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -15,6 +19,12 @@ class SwaggerConfig {
     @Bean
     fun customOpenAPI(): OpenAPI {
         val securitySchemeName = "X-Role-Header"
+        
+        // Extraemos los esquemas de las clases manualmente para asegurar su aparición
+        val errorResponseSchema = ModelConverters.getInstance().read(ErrorResponse::class.java)
+        val userRoleSchema = ModelConverters.getInstance().read(UserRole::class.java)
+        val userProfileSchema = ModelConverters.getInstance().read(UserProfile::class.java)
+
         return OpenAPI()
             .info(
                 Info()
@@ -38,6 +48,12 @@ class SwaggerConfig {
                             .`in`(SecurityScheme.In.HEADER)
                             .description("Simulación de rol: Escriba ADMIN, EDITOR o STUDENT")
                     )
+                    // Registramos manualmente cada esquema encontrado
+                    .apply {
+                        errorResponseSchema.forEach { (name, schema) -> addSchemas(name, schema) }
+                        userRoleSchema.forEach { (name, schema) -> addSchemas(name, schema) }
+                        userProfileSchema.forEach { (name, schema) -> addSchemas(name, schema) }
+                    }
             )
     }
 }
