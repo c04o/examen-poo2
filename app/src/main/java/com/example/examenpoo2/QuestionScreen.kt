@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.examenpoo2.ui.Service.ServiceLocator
 import com.example.examenpoo2.ui.screen.QuestionViewModel
-import com.example.examenpoo2.ui.ViewModel.QuestionViewModelFactory
+import com.example.examenpoo2.ui.screen.QuestionViewModelFactory
 
 @Composable
 fun QuestionScreen(

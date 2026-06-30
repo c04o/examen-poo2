@@ -1,4 +1,4 @@
-package com.example.examenpoo2.ui.Screen
+package com.example.examenpoo2.ui.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -23,18 +25,33 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.examenpoo2.ui.Service.ServiceLocator
+import com.example.examenpoo2.ui.ViewModel.LoginViewModel
+import com.example.examenpoo2.ui.ViewModel.LoginViewModelFactory
 
+/**
+ * Pantalla de inicio de sesión con validaciones de campos obligatorios.
+ */
 @Composable
-fun LockScreen(onLoginSuccess: () -> Unit) {
+fun LockScreen(
+    onLoginSuccess: () -> Unit,
+    viewModel: LoginViewModel = viewModel(
+        factory = LoginViewModelFactory(ServiceLocator.userRepository)
+    )
+) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // Estado para controlar la animación de entrada
+    // Estados para mensajes de error
+    var nameError by remember { mutableStateOf<String?>(null) }
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
+
     var isVisible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { isVisible = true }
 
-    // Fondo degradado oscuro elegante
     val backgroundGradient = Brush.verticalGradient(
         colors = listOf(Color(0xFF141E30), Color(0xFF243B55))
     )
@@ -45,12 +62,10 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
             .background(backgroundGradient),
         contentAlignment = Alignment.Center
     ) {
-        // Animación de aparición (Fade In + Slide desde abajo)
         AnimatedVisibility(
             visible = isVisible,
             enter = fadeIn(tween(800)) + slideInVertically(tween(800)) { 150 }
         ) {
-            // Tarjeta estilo "Glassmorphism" (translúcida)
             Card(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
@@ -65,21 +80,11 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
                     modifier = Modifier.padding(32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "¡Hola!",
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color.White
-                    )
-                    Text(
-                        text = "Regístrate para continuar",
-                        fontSize = 16.sp,
-                        color = Color.White.copy(alpha = 0.7f)
-                    )
+                    Text(text = "¡Hola!", fontSize = 32.sp, fontWeight = FontWeight.ExtraBold, color = Color.White)
+                    Text(text = "Regístrate para continuar", fontSize = 16.sp, color = Color.White.copy(alpha = 0.7f))
 
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    // Paleta de colores personalizada para los TextFields
                     val textFieldColors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF00C9FF),
                         unfocusedBorderColor = Color.White.copy(alpha = 0.4f),
@@ -87,46 +92,61 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
                         unfocusedLabelColor = Color.White.copy(alpha = 0.6f),
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White,
-                        cursorColor = Color(0xFF00C9FF),
-                        focusedLeadingIconColor = Color(0xFF00C9FF),
-                        unfocusedLeadingIconColor = Color.White.copy(alpha = 0.6f)
+                        errorBorderColor = Color.Red,
+                        errorLabelColor = Color.Red,
+                        errorSupportingTextColor = Color.Red
                     )
 
+                    // Campo Nombre
                     OutlinedTextField(
                         value = name,
-                        onValueChange = { name = it },
+                        onValueChange = {
+                            name = it
+                            if (it.isNotBlank()) nameError = null
+                        },
                         label = { Text("Nombre Completo") },
-                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = "Ícono Nombre") },
+                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
+                        isError = nameError != null,
+                        supportingText = { if (nameError != null) Text(nameError!!) },
                         colors = textFieldColors,
                         shape = RoundedCornerShape(12.dp)
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
+                    // Campo Email
                     OutlinedTextField(
                         value = email,
-                        onValueChange = { email = it },
+                        onValueChange = {
+                            email = it
+                            if (it.isNotBlank()) emailError = null
+                        },
                         label = { Text("Correo Electrónico") },
-                        leadingIcon = { Icon(Icons.Default.Email, contentDescription = "Ícono Correo") },
+                        leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
+                        isError = emailError != null,
+                        supportingText = { if (emailError != null) Text(emailError!!) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         colors = textFieldColors,
                         shape = RoundedCornerShape(12.dp)
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
+                    // Campo Contraseña
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = {
+                            password = it
+                            if (it.isNotBlank()) passwordError = null
+                        },
                         label = { Text("Contraseña") },
-                        leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Ícono Contraseña") },
+                        leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                         modifier = Modifier.fillMaxWidth(),
+                        isError = passwordError != null,
+                        supportingText = { if (passwordError != null) Text(passwordError!!) },
                         visualTransformation = PasswordVisualTransformation(),
-                        singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         colors = textFieldColors,
                         shape = RoundedCornerShape(12.dp)
@@ -136,21 +156,22 @@ fun LockScreen(onLoginSuccess: () -> Unit) {
 
                     Button(
                         onClick = {
-                            if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
-                                onLoginSuccess()
+                            // Validar campos
+                            nameError = if (name.isBlank()) "El nombre es obligatorio" else null
+                            emailError = if (email.isBlank()) "El correo es obligatorio" else null
+                            passwordError = if (password.isBlank()) "La contraseña es obligatoria" else null
+
+                            if (nameError == null && emailError == null && passwordError == null) {
+                                viewModel.registerAndLogin(name, email, password) {
+                                    onLoginSuccess()
+                                }
                             }
                         },
                         shape = RoundedCornerShape(50),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF00C9FF),
-                            contentColor = Color.White
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00C9FF)),
+                        modifier = Modifier.fillMaxWidth().height(56.dp)
                     ) {
-                        Text("Ingresar", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text("Ingresar", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
                     }
                 }
             }
