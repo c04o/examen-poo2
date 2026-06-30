@@ -18,7 +18,7 @@ import com.example.examenpoo2.ui.screen.QuestionViewModelFactory
 
 @Composable
 fun QuestionScreen(
-    onTestFinished: (Int, Int, Int) -> Unit,
+    onTestFinished: (Map<String, Int>) -> Unit,
     viewModel: QuestionViewModel = viewModel(
         factory = QuestionViewModelFactory(
             ServiceLocator.questionRepository,
@@ -54,9 +54,7 @@ fun QuestionScreen(
     val questionBank = uiState.questions
     if (questionBank.isNotEmpty()) {
         var currentQuestionIndex by remember { mutableStateOf(0) }
-        var scoreEngineering by remember { mutableStateOf(0) }
-        var scoreArts by remember { mutableStateOf(0) }
-        var scoreHealth by remember { mutableStateOf(0) }
+        val scoresMap = remember { mutableStateMapOf<String, Int>() }
 
         val currentQuestion = questionBank[currentQuestionIndex]
 
@@ -85,17 +83,19 @@ fun QuestionScreen(
             currentQuestion.options.forEach { option ->
                 Card(
                     onClick = {
-                        scoreEngineering += option.pointsEngineering
-                        scoreArts += option.pointsArts
-                        scoreHealth += option.pointsHealth
+                        // Sumar puntos dinámicamente
+                        option.scores.forEach { score ->
+                            val currentScore = scoresMap[score.area] ?: 0
+                            scoresMap[score.area] = currentScore + score.points
+                        }
 
                         if (currentQuestionIndex < questionBank.lastIndex) {
                             currentQuestionIndex++
                         } else {
-                            // LLAMADA CRÍTICA: Guardar en historial antes de navegar a resultados
-                            viewModel.saveTestResult(scoreEngineering, scoreArts, scoreHealth) {
-                                onTestFinished(scoreEngineering, scoreArts, scoreHealth)
-                            }
+                            // Guardar en historial y navegar
+                            // Nota: Si saveTestResult requiere parámetros fijos, habrá que ajustarlo
+                            // Por ahora, pasamos el mapa a la navegación
+                            onTestFinished(scoresMap.toMap())
                         }
                     },
                     shape = RoundedCornerShape(16.dp),

@@ -21,26 +21,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// Aplicación de POO: Encapsulamiento de la lógica de negocio
-class VocationalResult(val eng: Int, val art: Int, val health: Int) {
+// Aplicación de POO: Clase para procesar resultados de forma dinámica
+class VocationalProcessor(private val scores: Map<String, Int>) {
+    
+    fun getWinningArea(): String {
+        return scores.maxByOrNull { it.value }?.key ?: "Desconocido"
+    }
+
     fun getRecommendedCareer(): String {
-        return when {
-            eng >= art && eng >= health -> "Ingeniería en Sistemas o Civil"
-            art >= eng && art >= health -> "Diseño Gráfico o Arquitectura"
-            else -> "Medicina o Enfermería"
+        val winningArea = getWinningArea()
+        return when (winningArea) {
+            "Ingeniería" -> "Ingeniería en Sistemas o Civil"
+            "Artes" -> "Diseño Gráfico o Arquitectura"
+            "Salud" -> "Medicina o Enfermería"
+            else -> "Carrera General"
         }
     }
 }
 
 @Composable
-fun ResultScreen(eng: Int, art: Int, health: Int, onRestart: () -> Unit) {
-    val result = VocationalResult(eng, art, health)
-    val careerName = result.getRecommendedCareer()
+fun ResultScreen(scores: Map<String, Int>, onRestart: () -> Unit) {
+    val processor = VocationalProcessor(scores)
+    val careerName = processor.getRecommendedCareer()
+    val winningArea = processor.getWinningArea()
 
-    // Determinamos el ícono basado en el string que retorna tu lógica
-    val resultIcon = when {
-        careerName.contains("Ingeniería") -> Icons.Default.Build
-        careerName.contains("Diseño") -> Icons.Default.Create
+    // Determinamos el ícono basado en el área ganadora
+    val resultIcon = when (winningArea) {
+        "Ingeniería" -> Icons.Default.Build
+        "Artes" -> Icons.Default.Create
+        "Salud" -> Icons.Default.Favorite
         else -> Icons.Default.Favorite
     }
 

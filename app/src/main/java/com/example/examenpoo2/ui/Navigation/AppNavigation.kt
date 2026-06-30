@@ -48,12 +48,10 @@ fun AppNavigation() {
 
         composable<QuestionListRoute> {
             QuestionScreen(
-                onTestFinished = { eng, art, health ->
+                onTestFinished = { results ->
                     navController.navigate(
                         ResultRoute(
-                            engineeringScore = eng,
-                            artsScore = art,
-                            healthScore = health
+                            results = results
                         )
                     ) {
                         popUpTo(WelcomeRoute)
@@ -65,9 +63,7 @@ fun AppNavigation() {
         composable<ResultRoute> { backStackEntry ->
             val route: ResultRoute = backStackEntry.toRoute()
             ResultScreen(
-                eng = route.engineeringScore,
-                art = route.artsScore,
-                health = route.healthScore,
+                scores = route.results,
                 onRestart = {
                     navController.navigate(WelcomeRoute) {
                         popUpTo(WelcomeRoute) { inclusive = true }

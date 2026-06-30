@@ -8,7 +8,10 @@ data class Question(
 
 data class AnswerOption(
     val text: String,
-    val pointsEngineering: Int,
-    val pointsArts: Int,
-    val pointsHealth: Int
+    val scores: List<Score>
+)
+
+data class Score(
+    val area: String,
+    val points: Int
 )

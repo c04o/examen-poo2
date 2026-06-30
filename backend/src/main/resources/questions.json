@@ -5,21 +5,27 @@
     "options": [
       {
         "text": "Armar o reparar dispositivos electrónicos",
-        "pointsEngineering": 3,
-        "pointsArts": 0,
-        "pointsHealth": 0
+        "scores": [
+          { "area": "Ingeniería", "points": 3 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 0 }
+        ]
       },
       {
         "text": "Dibujar, pintar o escribir historias",
-        "pointsEngineering": 0,
-        "pointsArts": 3,
-        "pointsHealth": 0
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 3 },
+          { "area": "Salud", "points": 0 }
+        ]
       },
       {
         "text": "Aprender primeros auxilios o leer sobre el cuerpo humano",
-        "pointsEngineering": 0,
-        "pointsArts": 0,
-        "pointsHealth": 3
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 3 }
+        ]
       }
     ]
   },
@@ -29,21 +35,27 @@
     "options": [
       {
         "text": "Matemáticas, Física o Programación",
-        "pointsEngineering": 3,
-        "pointsArts": 0,
-        "pointsHealth": 0
+        "scores": [
+          { "area": "Ingeniería", "points": 3 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 0 }
+        ]
       },
       {
         "text": "Literatura, Arte o Música",
-        "pointsEngineering": 0,
-        "pointsArts": 3,
-        "pointsHealth": 0
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 3 },
+          { "area": "Salud", "points": 0 }
+        ]
       },
       {
         "text": "Biología, Química o Ciencias de la Salud",
-        "pointsEngineering": 0,
-        "pointsArts": 0,
-        "pointsHealth": 3
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 3 }
+        ]
       }
     ]
   },
@@ -53,21 +65,27 @@
     "options": [
       {
         "text": "Desarrollar software para automatizar procesos",
-        "pointsEngineering": 3,
-        "pointsArts": 0,
-        "pointsHealth": 0
+        "scores": [
+          { "area": "Ingeniería", "points": 3 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 0 }
+        ]
       },
       {
         "text": "Diseñar campañas creativas para concientización social",
-        "pointsEngineering": 0,
-        "pointsArts": 3,
-        "pointsHealth": 0
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 3 },
+          { "area": "Salud", "points": 0 }
+        ]
       },
       {
         "text": "Curar enfermedades o mejorar el acceso a la salud",
-        "pointsEngineering": 0,
-        "pointsArts": 0,
-        "pointsHealth": 3
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 3 }
+        ]
       }
     ]
   }
