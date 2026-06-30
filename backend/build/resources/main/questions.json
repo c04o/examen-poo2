@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "text": "¿Qué actividad prefieres realizar en tu tiempo libre?",
+    "options": [
+      {
+        "text": "Armar o reparar dispositivos electrónicos",
+        "scores": [
+          { "area": "Ingeniería", "points": 3 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 0 }
+        ]
+      },
+      {
+        "text": "Dibujar, pintar o escribir historias",
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 3 },
+          { "area": "Salud", "points": 0 }
+        ]
+      },
+      {
+        "text": "Aprender primeros auxilios o leer sobre el cuerpo humano",
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 3 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "text": "¿Cuál de estas asignaturas te interesa más?",
+    "options": [
+      {
+        "text": "Matemáticas, Física o Programación",
+        "scores": [
+          { "area": "Ingeniería", "points": 3 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 0 }
+        ]
+      },
+      {
+        "text": "Literatura, Arte o Música",
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 3 },
+          { "area": "Salud", "points": 0 }
+        ]
+      },
+      {
+        "text": "Biología, Química o Ciencias de la Salud",
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 3 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "text": "Si pudieras resolver un problema en el mundo, ¿cuál elegirías?",
+    "options": [
+      {
+        "text": "Desarrollar software para automatizar procesos",
+        "scores": [
+          { "area": "Ingeniería", "points": 3 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 0 }
+        ]
+      },
+      {
+        "text": "Diseñar campañas creativas para concientización social",
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 3 },
+          { "area": "Salud", "points": 0 }
+        ]
+      },
+      {
+        "text": "Curar enfermedades o mejorar el acceso a la salud",
+        "scores": [
+          { "area": "Ingeniería", "points": 0 },
+          { "area": "Artes", "points": 0 },
+          { "area": "Salud", "points": 3 }
+        ]
+      }
+    ]
+  }
+]
