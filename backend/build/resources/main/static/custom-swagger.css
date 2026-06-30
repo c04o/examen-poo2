@@ -1,0 +1,38 @@
+/* Tema Oscuro para Swagger UI */
+body {
+    background-color: #1b1b1b;
+    color: #e0e0e0;
+}
+.swagger-ui .info .title, .swagger-ui .info li, .swagger-ui .info p, .swagger-ui .info table {
+    color: #e0e0e0;
+}
+.swagger-ui .opblock-tag {
+    color: #00c9ff;
+    border-bottom: 1px solid #444;
+}
+.swagger-ui .opblock .opblock-summary-description {
+    color: #bbb;
+}
+.swagger-ui .scheme-container {
+    background: #252525;
+    box-shadow: none;
+    border-bottom: 1px solid #444;
+}
+.swagger-ui select {
+    background: #333;
+    color: white;
+}
+.swagger-ui .opblock.opblock-get { background: rgba(97, 175, 254, 0.1); border-color: #61affe; }
+.swagger-ui .opblock.opblock-post { background: rgba(73, 204, 144, 0.1); border-color: #49cc90; }
+.swagger-ui .opblock.opblock-put { background: rgba(252, 161, 48, 0.1); border-color: #fca130; }
+.swagger-ui .opblock.opblock-delete { background: rgba(249, 62, 62, 0.1); border-color: #f93e3e; }
+
+.swagger-ui .btn.execute {
+    background-color: #00c9ff;
+    color: white;
+    border: none;
+}
+.swagger-ui .topbar {
+    background-color: #000;
+    border-bottom: 2px solid #00c9ff;
+}
