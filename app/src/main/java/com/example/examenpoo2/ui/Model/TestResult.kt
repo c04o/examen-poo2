@@ -11,8 +11,6 @@ import java.util.Date
 data class TestResult(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val userId: Int,
-    val engineeringScore: Int,
-    val artsScore: Int,
-    val healthScore: Int,
+    val scores: Map<String, Int>,
     val timestamp: Long = System.currentTimeMillis()
 )

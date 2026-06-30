@@ -142,11 +142,11 @@ fun HistoryCard(result: TestResult) {
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
-                ResultItem("Ingeniería", result.engineeringScore)
-                ResultItem("Artes", result.artsScore)
-                ResultItem("Salud", result.healthScore)
+                result.scores.forEach { (area, points) ->
+                    ResultItem(area, points)
+                }
             }
         }
     }

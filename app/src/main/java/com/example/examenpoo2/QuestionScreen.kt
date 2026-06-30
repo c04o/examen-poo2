@@ -92,10 +92,11 @@ fun QuestionScreen(
                         if (currentQuestionIndex < questionBank.lastIndex) {
                             currentQuestionIndex++
                         } else {
-                            // Guardar en historial y navegar
-                            // Nota: Si saveTestResult requiere parámetros fijos, habrá que ajustarlo
-                            // Por ahora, pasamos el mapa a la navegación
-                            onTestFinished(scoresMap.toMap())
+                            // Guardar en historial dinámicamente y navegar
+                            val finalScores = scoresMap.toMap()
+                            viewModel.saveTestResult(finalScores) {
+                                onTestFinished(finalScores)
+                            }
                         }
                     },
                     shape = RoundedCornerShape(16.dp),

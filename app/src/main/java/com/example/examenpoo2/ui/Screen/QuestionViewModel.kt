@@ -46,21 +46,18 @@ class QuestionViewModel(
     }
 
     /**
-     * Guarda el resultado del test para el usuario actual.
+     * Guarda el resultado del test para el usuario actual de forma dinámica.
      */
-    // ... (dentro de la clase QuestionViewModel)
-    fun saveTestResult(eng: Int, art: Int, health: Int, onComplete: () -> Unit) {
+    fun saveTestResult(scores: Map<String, Int>, onComplete: () -> Unit) {
         viewModelScope.launch {
             try {
-                // Cambiamos .firstOrNull() por .first { it != null }
-                // Esto obliga a la corrutina a esperar hasta que el usuario esté disponible en el Flow
                 userRepository.lastUser.first { it != null }?.let { user ->
-                    testResultRepository.saveResult(user.id, eng, art, health)
+                    testResultRepository.saveResult(user.id, scores)
                 }
             } catch (e: Exception) {
                 Log.e("QuestionViewModel", "Error al guardar: ${e.message}")
             } finally {
-                onComplete() // Navegamos a la pantalla de resultados pase lo que pase
+                onComplete()
             }
         }
     }

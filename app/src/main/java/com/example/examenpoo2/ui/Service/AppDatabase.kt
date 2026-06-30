@@ -1,9 +1,8 @@
 package com.example.examenpoo2.ui.Service
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.examenpoo2.ui.Model.Converters
 import com.example.examenpoo2.ui.Model.TestResult
 import com.example.examenpoo2.ui.Model.User
 
@@ -16,7 +15,8 @@ import com.example.examenpoo2.ui.Model.User
  * Sigue el patrón Singleton para asegurar que solo exista una instancia de la base de datos
  * abierta en toda la aplicación, optimizando así el uso de recursos.
  */
-@Database(entities = [User::class, TestResult::class], version = 1, exportSchema = false)
+@Database(entities = [User::class, TestResult::class], version = 2, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     /**

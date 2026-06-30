@@ -12,12 +12,10 @@ class TestResultRepository(private val testResultDao: TestResultDao) {
     /**
      * Guarda un nuevo resultado de test.
      */
-    suspend fun saveResult(userId: Int, eng: Int, art: Int, health: Int) {
+    suspend fun saveResult(userId: Int, scores: Map<String, Int>) {
         val result = TestResult(
             userId = userId,
-            engineeringScore = eng,
-            artsScore = art,
-            healthScore = health
+            scores = scores
         )
         testResultDao.insertResult(result)
     }
