@@ -1,52 +1,98 @@
 package com.example.examenpoo2.backend.controller
 
-import com.example.examenpoo2.backend.model.AnswerOption
+import com.example.examenpoo2.backend.model.ErrorResponse
 import com.example.examenpoo2.backend.model.Question
+import com.example.examenpoo2.backend.model.UserProfile
+import com.example.examenpoo2.backend.model.UserRole
+import com.example.examenpoo2.backend.service.QuestionService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
 @Tag(name = "Questions", description = "Vocational orientation test questions API")
 @RestController
 @RequestMapping("/questions")
-class QuestionController {
+class QuestionController(private val questionService: QuestionService) {
 
     @Operation(
-        summary = "Get all vocational test questions",
-        description = "Returns the list of questions with multiple-choice options. Each option carries points for Engineering, Arts, and Health vocational areas."
+        summary = "Check role permissions",
+        description = "Returns the profile and permissions for the current role."
     )
+    @GetMapping("/me")
+    fun checkMyPermissions(@RequestHeader("X-Role", defaultValue = "STUDENT") role: String): UserProfile {
+        val userRole = try { UserRole.valueOf(role.uppercase()) } catch (e: Exception) { UserRole.STUDENT }
+        
+        return when (userRole) {
+            UserRole.ADMIN -> UserProfile(userRole, listOf("GET", "POST", "PUT", "DELETE"), "Acceso total al sistema.")
+            UserRole.EDITOR -> UserProfile(userRole, listOf("GET", "POST"), "Puede ver y crear preguntas.")
+            UserRole.STUDENT -> UserProfile(userRole, listOf("GET"), "Solo puede realizar el test.")
+        }
+    }
+
+    @Operation(summary = "Get all questions", description = "Public access for all roles.")
     @GetMapping
-    fun getQuestions(): List<Question> {
-        return listOf(
-            Question(
-                id = 1,
-                text = "¿Qué actividad prefieres realizar en tu tiempo libre?",
-                options = listOf(
-                    AnswerOption("Armar o reparar dispositivos electrónicos", pointsEngineering = 3, pointsArts = 0, pointsHealth = 0),
-                    AnswerOption("Dibujar, pintar o escribir historias", pointsEngineering = 0, pointsArts = 3, pointsHealth = 0),
-                    AnswerOption("Aprender primeros auxilios o leer sobre el cuerpo humano", pointsEngineering = 0, pointsArts = 0, pointsHealth = 3)
-                )
-            ),
-            Question(
-                id = 2,
-                text = "¿Cuál de estas asignaturas te interesa más?",
-                options = listOf(
-                    AnswerOption("Matemáticas, Física o Programación", pointsEngineering = 3, pointsArts = 0, pointsHealth = 0),
-                    AnswerOption("Literatura, Arte o Música", pointsEngineering = 0, pointsArts = 3, pointsHealth = 0),
-                    AnswerOption("Biología, Química o Ciencias de la Salud", pointsEngineering = 0, pointsArts = 0, pointsHealth = 3)
-                )
-            ),
-            Question(
-                id = 3,
-                text = "Si pudieras resolver un problema en el mundo, ¿cuál elegirías?",
-                options = listOf(
-                    AnswerOption("Desarrollar software para automatizar procesos", pointsEngineering = 3, pointsArts = 0, pointsHealth = 0),
-                    AnswerOption("Diseñar campañas creativas para concientización social", pointsEngineering = 0, pointsArts = 3, pointsHealth = 0),
-                    AnswerOption("Curar enfermedades o mejorar el acceso a la salud", pointsEngineering = 0, pointsArts = 0, pointsHealth = 3)
-                )
-            )
-        )
+    fun getQuestions(): List<Question> = questionService.getVocationalTest()
+
+    @Operation(summary = "Create a new question", description = "Allowed for ADMIN and EDITOR.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "201", description = "Question created", content = [Content(schema = Schema(implementation = Question::class))]),
+        ApiResponse(responseCode = "403", description = "Forbidden", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
+    ])
+    @PostMapping
+    fun createQuestion(
+        @RequestHeader("X-Role", defaultValue = "STUDENT") role: String,
+        @RequestBody question: Question
+    ): ResponseEntity<Any> {
+        return if (role.uppercase() == UserRole.ADMIN.name || role.uppercase() == UserRole.EDITOR.name) {
+            val created = questionService.createQuestion(question)
+            ResponseEntity.status(HttpStatus.CREATED).body(created)
+        } else {
+            ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse(403, "Acceso denegado: Se requiere rol ADMIN o EDITOR.", UserRole.EDITOR))
+        }
+    }
+
+    @Operation(summary = "Update a question", description = "Allowed only for ADMIN.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Question updated"),
+        ApiResponse(responseCode = "403", description = "Forbidden", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+        ApiResponse(responseCode = "404", description = "Not Found")
+    ])
+    @PutMapping("/{id}")
+    fun updateQuestion(
+        @RequestHeader("X-Role", defaultValue = "STUDENT") role: String,
+        @PathVariable id: Int,
+        @RequestBody question: Question
+    ): ResponseEntity<Any> {
+        if (role.uppercase() != UserRole.ADMIN.name) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse(403, "Acceso denegado: Solo el ADMIN puede actualizar.", UserRole.ADMIN))
+        }
+        val updated = questionService.updateQuestion(id, question)
+        return if (updated != null) ResponseEntity.ok(updated) else ResponseEntity.notFound().build()
+    }
+
+    @Operation(summary = "Delete a question", description = "Allowed only for ADMIN.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "204", description = "Question deleted"),
+        ApiResponse(responseCode = "403", description = "Forbidden", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+        ApiResponse(responseCode = "404", description = "Not Found")
+    ])
+    @DeleteMapping("/{id}")
+    fun deleteQuestion(
+        @RequestHeader("X-Role", defaultValue = "STUDENT") role: String,
+        @PathVariable id: Int
+    ): ResponseEntity<Any> {
+        if (role.uppercase() != UserRole.ADMIN.name) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse(403, "Acceso denegado: Solo el ADMIN puede eliminar.", UserRole.ADMIN))
+        }
+        return if (questionService.deleteQuestion(id)) ResponseEntity.noContent().build() else ResponseEntity.notFound().build()
     }
 }

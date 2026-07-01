@@ -9,11 +9,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.examenpoo2.ui.Navigation.AppNavigation
+import com.example.examenpoo2.ui.Service.ServiceLocator
 import com.example.examenpoo2.ui.Theme.ExamenPOO2Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Inicializamos el ServiceLocator con el contexto de la aplicación
+        ServiceLocator.init(this)
+
         enableEdgeToEdge()
         setContent {
             ExamenPOO2Theme {

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Roderick Caldera",
+    "email": "rodecaldera@uamv.edu.ni",
+    "password": "1234",
+    "role": "ADMIN"
+  },
+  {
+    "id": 2,
+    "name": "Diego Rodriguez",
+    "email": "dalrodriguez@uamv.edu.ni",
+    "password": "student",
+    "role": "EDITOR"
+  },
+  {
+    "id": 3,
+    "name": "Lenin Barreto",
+    "email": "lsbarreto@uamv.edu.ni",
+    "password": "1234",
+    "role": "STUDENT"
+  }
+]

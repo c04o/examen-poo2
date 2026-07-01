@@ -1,10 +1,11 @@
-package com.example.examenpoo2.ui.Screen
+package com.example.examenpoo2.ui.screen
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,8 +19,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun WelcomeScreen(onStartClick: () -> Unit) {
-    // Animación de pulso para el ícono
+fun WelcomeScreen(
+    onStartClick: () -> Unit,
+    onHistoryClick: () -> Unit
+) {
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val scale by infiniteTransition.animateFloat(
         initialValue = 0.9f,
@@ -30,7 +33,6 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
         ), label = "icon_scale"
     )
 
-    // Fondo degradado moderno
     val backgroundGradient = Brush.verticalGradient(
         colors = listOf(Color(0xFF6A11CB), Color(0xFF2575FC))
     )
@@ -55,7 +57,7 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
 
         Text(
             text = "Test Vocacional",
-            style = MaterialTheme.typography.displayMedium, // Usando MaterialTheme typography para consistencia
+            style = MaterialTheme.typography.displayMedium,
             fontWeight = FontWeight.ExtraBold,
             color = Color.White
         )
@@ -84,6 +86,26 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
         ) {
             Text(text = "Comenzar Aventura", fontWeight = FontWeight.Bold)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedButton(
+            onClick = onHistoryClick,
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = Color.White
+            ),
+            border = ButtonDefaults.outlinedButtonBorder.copy(
+                brush = Brush.linearGradient(listOf(Color.White, Color.White.copy(alpha = 0.5f)))
+            ),
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .height(56.dp)
+            ) {
+            Icon(Icons.Default.History, contentDescription = null)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Ver Historial", fontWeight = FontWeight.SemiBold)
         }
     }
 }

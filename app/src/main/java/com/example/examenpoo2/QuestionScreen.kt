@@ -13,29 +13,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.examenpoo2.ui.Service.ServiceLocator
-import com.example.examenpoo2.ui.ViewModel.QuestionViewModel
-import com.example.examenpoo2.ui.ViewModel.QuestionViewModelFactory
+import com.example.examenpoo2.ui.screen.QuestionViewModel
+import com.example.examenpoo2.ui.screen.QuestionViewModelFactory
 
 @Composable
 fun QuestionScreen(
-    onTestFinished: (Int, Int, Int) -> Unit,
-    // Instanciamos tu ViewModel usando tu Factory y el ServiceLocator
+    onTestFinished: (Map<String, Int>) -> Unit,
     viewModel: QuestionViewModel = viewModel(
-        factory = QuestionViewModelFactory(ServiceLocator.questionRepository)
+        factory = QuestionViewModelFactory(
+            ServiceLocator.questionRepository,
+            ServiceLocator.userRepository,
+            ServiceLocator.testResultRepository
+        )
     )
 ) {
-    // Observamos el estado de tu ViewModel (QuestionListState)
     val uiState by viewModel.uiState.collectAsState()
 
-    // 1. Mostrar estado de Carga
     if (uiState.isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator(color = Color(0xFF00C9FF))
         }
-        return // Detenemos la ejecución aquí mientras carga
+        return
     }
 
-    // 2. Mostrar estado de Error
     if (uiState.error != null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -51,13 +51,10 @@ fun QuestionScreen(
         return
     }
 
-    // 3. Mostrar estado de Éxito (Si hay preguntas)
     val questionBank = uiState.questions
     if (questionBank.isNotEmpty()) {
         var currentQuestionIndex by remember { mutableStateOf(0) }
-        var scoreEngineering by remember { mutableStateOf(0) }
-        var scoreArts by remember { mutableStateOf(0) }
-        var scoreHealth by remember { mutableStateOf(0) }
+        val scoresMap = remember { mutableStateMapOf<String, Int>() }
 
         val currentQuestion = questionBank[currentQuestionIndex]
 
@@ -86,14 +83,20 @@ fun QuestionScreen(
             currentQuestion.options.forEach { option ->
                 Card(
                     onClick = {
-                        scoreEngineering += option.pointsEngineering
-                        scoreArts += option.pointsArts
-                        scoreHealth += option.pointsHealth
+                        // Sumar puntos dinámicamente
+                        option.scores.forEach { score ->
+                            val currentScore = scoresMap[score.area] ?: 0
+                            scoresMap[score.area] = currentScore + score.points
+                        }
 
                         if (currentQuestionIndex < questionBank.lastIndex) {
                             currentQuestionIndex++
                         } else {
-                            onTestFinished(scoreEngineering, scoreArts, scoreHealth)
+                            // Guardar en historial dinámicamente y navegar
+                            val finalScores = scoresMap.toMap()
+                            viewModel.saveTestResult(finalScores) {
+                                onTestFinished(finalScores)
+                            }
                         }
                     },
                     shape = RoundedCornerShape(16.dp),
@@ -120,7 +123,6 @@ fun QuestionScreen(
             }
         }
     } else {
-        // Estado vacío: Cargó bien pero la lista vino vacía (0 preguntas)
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("No hay preguntas disponibles en el servidor.", color = Color.White)
         }

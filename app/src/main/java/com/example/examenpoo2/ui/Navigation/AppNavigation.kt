@@ -1,46 +1,62 @@
 package com.example.examenpoo2.ui.Navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.examenpoo2.ui.Screen.LockScreen
-import com.example.examenpoo2.ui.Screen.WelcomeScreen
+import com.example.examenpoo2.ui.screen.LockScreen
+import com.example.examenpoo2.ui.screen.WelcomeScreen
 import com.example.examenpoo2.QuestionScreen
 import com.example.examenpoo2.ResultScreen
-import com.example.examenpoo2.ui.Service.ServiceLocator
-import com.example.examenpoo2.ui.ViewModel.QuestionViewModel
-import com.example.examenpoo2.ui.ViewModel.QuestionViewModelFactory
+import com.example.examenpoo2.ui.screen.HistoryScreen
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
-// Importamos las rutas explícitamente si es necesario o usamos el mismo paquete
+/**
+ * Función composable que define la estructura de navegación principal de la aplicación.
+ */
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = LoginRoute) {
-        
+    NavHost(
+        navController = navController,
+        startDestination = LoginRoute
+    ) {
+
         composable<LoginRoute> {
             LockScreen(
-                onLoginSuccess = { 
+                onLoginSuccess = {
                     navController.navigate(WelcomeRoute) {
                         popUpTo(LoginRoute) { inclusive = true }
                     }
                 }
             )
         }
-        
+
         composable<WelcomeRoute> {
             WelcomeScreen(
-                onStartClick = { navController.navigate(QuestionListRoute) }
+                onStartClick = { navController.navigate(QuestionListRoute) },
+                onHistoryClick = { navController.navigate(HistoryRoute) }
             )
         }
-        
+
+        composable<HistoryRoute> {
+            HistoryScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+
         composable<QuestionListRoute> {
             QuestionScreen(
-                onTestFinished = { eng, art, health ->
-                    navController.navigate(ResultRoute(eng, art, health)) {
+                onTestFinished = { results ->
+                    val resultsJson = Json.encodeToString<Map<String, Int>>(results)
+                    navController.navigate(
+                        ResultRoute(
+                            resultsJson = resultsJson
+                        )
+                    ) {
                         popUpTo(WelcomeRoute)
                     }
                 }
@@ -49,10 +65,9 @@ fun AppNavigation() {
 
         composable<ResultRoute> { backStackEntry ->
             val route: ResultRoute = backStackEntry.toRoute()
+            val results: Map<String, Int> = Json.decodeFromString(route.resultsJson)
             ResultScreen(
-                eng = route.engineeringScore,
-                art = route.artsScore,
-                health = route.healthScore,
+                scores = results,
                 onRestart = {
                     navController.navigate(WelcomeRoute) {
                         popUpTo(WelcomeRoute) { inclusive = true }
