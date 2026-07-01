@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d0cf2f9-ad30-4234-889a-41df23a3ace9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/example/examenpoo2/ui/Navigation/AppNavigation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/example/examenpoo2/ui/Navigation/AppNavigation.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/example/examenpoo2/ui/Navigation/Navigation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/example/examenpoo2/ui/Navigation/Navigation.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/example/examenpoo2/ui/Service/AppDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/example/examenpoo2/ui/Service/AppDatabase.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/example/examenpoo2/ui/Service/RetrofitClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/example/examenpoo2/ui/Service/RetrofitClient.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/example/examenpoo2/ui/Repository/QuestionRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/example/examenpoo2/ui/Repository/QuestionRepository.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/users.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
