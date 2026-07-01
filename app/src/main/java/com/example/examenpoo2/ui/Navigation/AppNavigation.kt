@@ -10,6 +10,8 @@ import com.example.examenpoo2.ui.screen.WelcomeScreen
 import com.example.examenpoo2.QuestionScreen
 import com.example.examenpoo2.ResultScreen
 import com.example.examenpoo2.ui.screen.HistoryScreen
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * Función composable que define la estructura de navegación principal de la aplicación.
@@ -49,9 +51,10 @@ fun AppNavigation() {
         composable<QuestionListRoute> {
             QuestionScreen(
                 onTestFinished = { results ->
+                    val resultsJson = Json.encodeToString<Map<String, Int>>(results)
                     navController.navigate(
                         ResultRoute(
-                            results = results
+                            resultsJson = resultsJson
                         )
                     ) {
                         popUpTo(WelcomeRoute)
@@ -62,8 +65,9 @@ fun AppNavigation() {
 
         composable<ResultRoute> { backStackEntry ->
             val route: ResultRoute = backStackEntry.toRoute()
+            val results: Map<String, Int> = Json.decodeFromString(route.resultsJson)
             ResultScreen(
-                scores = route.results,
+                scores = results,
                 onRestart = {
                     navController.navigate(WelcomeRoute) {
                         popUpTo(WelcomeRoute) { inclusive = true }

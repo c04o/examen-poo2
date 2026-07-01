@@ -1,6 +1,9 @@
 package com.example.examenpoo2.ui.Service
 
 import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.examenpoo2.ui.Model.Converters
 import com.example.examenpoo2.ui.Model.TestResult

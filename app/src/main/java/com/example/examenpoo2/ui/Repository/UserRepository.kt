@@ -1,5 +1,6 @@
 package com.example.examenpoo2.ui.Repository
 
+import android.util.Log
 import com.example.examenpoo2.ui.Model.User
 import com.example.examenpoo2.ui.Service.RetrofitClient
 import com.example.examenpoo2.ui.Service.UserDao
@@ -26,13 +27,14 @@ class UserRepository(private val userDao: UserDao) {
             
             if (response.isSuccessful && response.body() != null) {
                 val user = response.body()!!
-                // Guardamos en Room para persistencia local y manejo de sesión
                 userDao.insertUser(user)
                 user
             } else {
+                Log.e("UserRepository", "Login fallido: ${response.code()} - ${response.errorBody()?.string()}")
                 null
             }
         } catch (e: Exception) {
+            Log.e("UserRepository", "Error de red al conectar al backend: ${e.message}", e)
             // Si el backend falla, intentamos login local como fallback (opcional)
             userDao.getUserByEmail(email)?.takeIf { it.password == password }
         }

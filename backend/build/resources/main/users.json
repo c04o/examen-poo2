@@ -9,7 +9,7 @@
   {
     "id": 2,
     "name": "Diego Rodriguez",
-    "email": "dalrodriguez@uamv.edu.ni"
+    "email": "dalrodriguez@uamv.edu.ni",
     "password": "student",
     "role": "EDITOR"
   },
